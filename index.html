@@ -1,9 +1,4 @@
-<!doctype html>
-<html lang="de">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Pixel Hopper</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +15,8 @@
   --accent: #ff5a4e;
   --coin: #ffc21f;
   --mine: #fff1c4;
+  --bar: #e2f0f2;
+  --bar-mine: #ffe08a;
   --sky-top: #8fd3e6;
   --sky-bottom: #e0f5f2;
   --sun: #ffe88a;
@@ -56,7 +53,9 @@ body {
 }
 .app { max-width: 1080px; margin-inline: auto; display: grid; gap: 20px; }
 .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.top > div { min-width: 0; flex: 1 1 320px; }
+.top > div:first-child { min-width: 0; flex: 1 1 320px; }
+.top-actions { display: flex; gap: 10px; align-items: center; flex: none; }
+.top-actions .seg-btn { padding: 11px 12px; }
 h1 { font: 700 clamp(30px, 6vw, 44px)/1.05 var(--font-display); margin: 0 0 6px; letter-spacing: .01em; text-wrap: balance; }
 .lead { margin: 0; color: var(--muted); max-width: 60ch; }
 h2 { font: 700 22px/1.2 var(--font-display); margin: 0; }
@@ -79,28 +78,44 @@ h2 { font: 700 22px/1.2 var(--font-display); margin: 0; }
 .hint { margin: 0; color: var(--muted); font-size: 13px; }
 kbd { font: 600 12px var(--font-mono); background: var(--panel); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 1px 6px; color: var(--ink); }
 
-.board { min-width: 0; background: var(--panel); border: 2px solid var(--ink); border-radius: 6px; padding: 16px; display: grid; gap: 12px; }
-.board-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-.best { font-size: 13px; color: var(--muted); }
-.best strong { color: var(--ink); font-variant-numeric: tabular-nums; }
-.status { margin: 0; font-size: 13px; color: var(--muted); }
-.rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-.rows li { display: grid; grid-template-columns: 2.4em minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 8px 6px; border-bottom: 1px solid var(--line); }
-.rows li.mine { background: var(--mine); }
-.rows li.gap { display: block; text-align: center; color: var(--muted); padding: 2px; border-bottom: 0; letter-spacing: .3em; }
-.rank { font: 700 17px var(--font-display); text-align: center; }
-.rows li.r1 .rank, .rows li.r2 .rank, .rows li.r3 .rank { background: var(--coin); border-radius: 3px; }
+.board { min-width: 0; background: var(--panel); border: 2px solid var(--ink); border-radius: 6px; padding: 16px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.board-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; }
+.best-box { display: grid; justify-items: end; line-height: 1.1; }
+.best-l { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.best-box strong { font: 700 26px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+.tabs { display: flex; width: 100%; }
+.tabs .seg-btn { flex: 1 1 0; min-width: 0; padding-inline: 8px; }
+.seg-btn:disabled { opacity: .45; cursor: not-allowed; }
+.status { margin: 0; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.your-rank { margin: 0; padding: 8px 10px; background: var(--mine); border: 2px solid var(--ink); border-radius: 4px; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.rows li { --w: 0%; position: relative; isolation: isolate; display: grid; grid-template-columns: 2.4em minmax(0, 1fr) auto; gap: 10px; align-items: center;
+  padding: 7px 10px 7px 7px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); overflow: hidden; }
+.rows li::before { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: var(--bar); z-index: -1; }
+.rows li.mine { border-color: var(--ink); background: var(--mine); }
+.rows li.mine::before { background: var(--bar-mine); }
+.rows li.gap { display: block; text-align: center; color: var(--muted); padding: 0; border: 0; background: none; letter-spacing: .3em; line-height: 1; }
+.rows li.gap::before { display: none; }
+.rank { width: 2.4em; height: 2.4em; display: grid; place-items: center; font: 700 15px var(--font-display); background: #e4eef0; color: var(--ink);
+  border-radius: 4px; font-variant-numeric: tabular-nums; }
+.rank.small { font-size: 11px; }
+.rows li.r1 .rank, .rows li.r2 .rank, .rows li.r3 .rank { border: 2px solid var(--ink); }
+.rows li.r1 .rank { background: var(--coin); }
 .rows li.r2 .rank { background: #d5dfe8; }
 .rows li.r3 .rank { background: #f0c9a4; }
-.who { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-.pts { font-weight: 600; font-variant-numeric: tabular-nums; }
-.empty { margin: 0; color: var(--muted); font-size: 14px; }
+.who { min-width: 0; display: grid; line-height: 1.25; }
+.nm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sub { font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pts-box { display: grid; justify-items: end; line-height: 1.2; }
+.pts { font: 700 17px var(--font-display); font-variant-numeric: tabular-nums; }
+.pts-sub { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.empty { margin: 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
 
-.name { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
+.name { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
 .name label { font-size: 13px; font-weight: 600; }
 .name-row { display: flex; gap: 8px; }
-.name-row input { flex: 1 1 auto; min-width: 0; font: 400 15px var(--font-mono); padding: 9px 10px; border: 2px solid var(--ink); border-radius: 4px; background: #fff; color: var(--ink); }
-.note { margin: 0; min-height: 1.4em; font-size: 12px; color: var(--muted); }
+.name-row input { flex: 1 1 0; width: 0; min-width: 0; font: 400 15px var(--font-mono); padding: 9px 10px; border: 2px solid var(--ink); border-radius: 4px; background: #fff; color: var(--ink); }
+.note { margin: 0; min-height: 1.4em; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
 
 h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
 .count { font: 400 13px var(--font-mono); color: var(--muted); margin-left: 6px; }
@@ -164,55 +179,60 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
 
 @media (max-width: 820px) { .layout { grid-template-columns: minmax(0, 1fr); } }
 </style>
-</head>
-<body>
+
 <div class="app">
   <header class="top">
     <div>
       <h1>Pixel Hopper</h1>
-      <p class="lead">Spring über Stacheln und Lücken, duck dich unter Vögeln und Balken, hol dir Power-ups aus ?-Blöcken und flieg über breite Schluchten. Dein Score kommt in die gemeinsame Bestenliste.</p>
+      <p class="lead" data-i18n="lead">Spring über Stacheln und Lücken, duck dich unter Vögeln und Balken, hol dir Power-ups aus ?-Blöcken und flieg über breite Schluchten. Dein Score kommt in die gemeinsame Bestenliste.</p>
     </div>
-    <button id="sound" class="btn ghost" type="button" aria-pressed="true">Ton an</button>
+    <div class="top-actions">
+      <div id="langSeg" class="seg" role="group" data-i18n-aria="langLabel" aria-label="Sprache">
+        <button id="langDe" class="seg-btn on" type="button" aria-pressed="true" aria-label="Deutsch" lang="de">DE</button>
+        <button id="langEn" class="seg-btn" type="button" aria-pressed="false" aria-label="English" lang="en">EN</button>
+      </div>
+      <button id="sound" class="btn ghost" type="button" aria-pressed="true">Ton an</button>
+    </div>
   </header>
 
   <main class="layout">
     <section class="play">
       <div class="modes">
-        <div class="seg" role="group" aria-label="Spielmodus">
-          <button id="modeEndless" class="seg-btn on" type="button" aria-pressed="true">Endlos</button>
-          <button id="modeAdv" class="seg-btn" type="button" aria-pressed="false">Abenteuer</button>
+        <div class="seg" role="group" data-i18n-aria="modeLabel" aria-label="Spielmodus">
+          <button id="modeEndless" class="seg-btn on" type="button" aria-pressed="true" data-i18n="endless">Endlos</button>
+          <button id="modeAdv" class="seg-btn" type="button" aria-pressed="false" data-i18n="adventure">Abenteuer</button>
         </div>
-        <div id="levelPick" class="seg" role="group" aria-label="Welt wählen" hidden>
+        <div id="levelPick" class="seg" role="group" data-i18n-aria="worldPick" aria-label="Welt wählen" hidden>
           <button class="seg-btn lvl on" type="button" data-lvl="1" aria-pressed="true">Welt 1</button>
           <button class="seg-btn lvl" type="button" data-lvl="2" aria-pressed="false">Welt 2</button>
           <button class="seg-btn lvl" type="button" data-lvl="3" aria-pressed="false">Welt 3</button>
         </div>
       </div>
       <div class="stage">
-        <canvas id="game" tabindex="0" aria-label="Spielfeld. Leertaste, Pfeil hoch oder Tippen zum Springen. Pfeil runter oder unteres Drittel gedrückt halten zum Ducken."></canvas>
+        <canvas id="game" tabindex="0" data-i18n-aria="canvasAria" aria-label="Spielfeld. Leertaste, Pfeil hoch oder Tippen zum Springen. Pfeil runter oder unteres Drittel gedrückt halten zum Ducken."></canvas>
       </div>
-      <div class="pad" aria-label="Touch-Steuerung">
+      <div class="pad" data-i18n-aria="padLabel" aria-label="Touch-Steuerung">
         <div class="pad-group">
-          <button class="pad-btn" type="button" data-k="left" aria-label="Links">◀</button>
-          <button class="pad-btn" type="button" data-k="right" aria-label="Rechts">▶</button>
+          <button class="pad-btn" type="button" data-k="left" data-i18n-aria="left" aria-label="Links">◀</button>
+          <button class="pad-btn" type="button" data-k="right" data-i18n-aria="right" aria-label="Rechts">▶</button>
         </div>
         <div class="pad-group">
-          <button class="pad-btn" type="button" data-k="fire">Feuer</button>
-          <button class="pad-btn" type="button" data-k="jump">Sprung</button>
+          <button class="pad-btn" type="button" data-k="fire" data-i18n="fire">Feuer</button>
+          <button class="pad-btn" type="button" data-k="jump" data-i18n="jump">Sprung</button>
         </div>
       </div>
-      <p class="hint" id="hintEndless"><kbd>Leertaste</kbd> <kbd>↑</kbd> oder Tippen: springen, länger halten springt höher. <kbd>↓</kbd> oder unteres Drittel gedrückt halten: ducken. Spring von unten gegen einen ?-Block für ein Power-up: Schild, Magnet, Doppelsprung, Flügel oder doppelte Punkte. Mit Flügeln hältst du die Sprungtaste zum Steigen.</p>
-      <p class="hint" id="hintAdv" hidden><kbd>←</kbd> <kbd>→</kbd> oder <kbd>A</kbd> <kbd>D</kbd>: laufen. <kbd>Leertaste</kbd>: springen, länger halten springt höher. <kbd>F</kbd> oder <kbd>Shift</kbd>: Feuerball, wenn du eine Feuerblume hast. Spring auf Gegner, um sie zu besiegen. Stachelige Gegner besiegst du nur mit Feuer. Triff ?-Blöcke von unten. Ziel ist die Flagge. Münzen kommen auf dein Konto, die Bestenliste zählt nur im Endlos-Modus.</p>
+      <p class="hint" id="hintEndless" data-i18n-html="hintEndless"></p>
+      <p class="hint" id="hintAdv" data-i18n-html="hintAdv" hidden></p>
 
       <section class="shop" aria-labelledby="st">
         <div class="shop-head">
-          <h2 id="st">Skin-Box</h2>
-          <span class="wallet">Münzen <strong id="wallet">0</strong></span>
+          <h2 id="st" data-i18n="shop">Skin-Box</h2>
+          <span class="wallet"><span data-i18n="coins">Münzen</span> <strong id="wallet">0</strong></span>
         </div>
         <div class="buy">
           <div class="chest" id="chest" aria-hidden="true">?</div>
           <div class="buy-info">
-            <p>Münzen aus deinen Runden landen auf deinem Konto. Jede Box enthält einen zufälligen Skin.</p>
+            <p data-i18n="buyText">Münzen aus deinen Runden landen auf deinem Konto. Jede Box enthält einen zufälligen Skin.</p>
             <div class="meter" aria-hidden="true"><span id="meterFill"></span></div>
             <button id="buyBtn" class="btn" type="button">Box öffnen</button>
             <p id="buyNote" class="note" aria-live="polite"></p>
@@ -220,10 +240,10 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
         </div>
         <div id="reveal" class="reveal" hidden aria-live="polite"></div>
         <div>
-          <p class="note">Chancen pro Box. Doppelte Skins geben einen Teil der Münzen zurück.</p>
+          <p class="note" data-i18n="oddsNote">Chancen pro Box. Doppelte Skins geben einen Teil der Münzen zurück.</p>
           <ul class="odds" id="odds"></ul>
         </div>
-        <h3>Sammlung <span id="collCount" class="count"></span></h3>
+        <h3><span data-i18n="collection">Sammlung</span> <span id="collCount" class="count"></span></h3>
         <div id="collection" class="coll"></div>
         <p id="saveNote" class="note"></p>
       </section>
@@ -231,17 +251,25 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
 
     <aside class="board" aria-labelledby="bt">
       <div class="board-head">
-        <h2 id="bt">Bestenliste</h2>
-        <span class="best">Dein Rekord <strong id="best">0</strong></span>
+        <h2 id="bt" data-i18n="board">Bestenliste</h2>
+        <div class="best-box">
+          <span class="best-l" data-i18n="yourBest">Dein Rekord</span>
+          <strong id="best">0</strong>
+        </div>
       </div>
-      <p id="status" class="status">Verbinde mit der Bestenliste …</p>
+      <div class="seg tabs" role="group" data-i18n-aria="tabsLabel" aria-label="Ansicht">
+        <button id="tabAll" class="seg-btn on" type="button" aria-pressed="true" data-i18n="tabAll" disabled>Alle Spieler</button>
+        <button id="tabMine" class="seg-btn" type="button" aria-pressed="false" data-i18n="tabMine">Meine Runden</button>
+      </div>
+      <p id="status" class="status" aria-live="polite"></p>
+      <p id="yourRank" class="your-rank" hidden></p>
       <ol id="rows" class="rows"></ol>
-      <p id="empty" class="empty" hidden>Noch keine Einträge. Spiel eine Runde und sei die oder der Erste.</p>
+      <p id="empty" class="empty" hidden></p>
       <form id="nameForm" class="name" autocomplete="off">
-        <label for="nick">Dein Name in der Liste</label>
+        <label for="nick" data-i18n="nameLabel">Dein Name in der Liste</label>
         <div class="name-row">
-          <input id="nick" name="nick" type="text" maxlength="14" placeholder="Spieler" autocomplete="off">
-          <button class="btn" type="submit">Speichern</button>
+          <input id="nick" name="nick" type="text" maxlength="14" data-i18n-ph="player" placeholder="Spieler" autocomplete="off">
+          <button class="btn" type="submit" data-i18n="save">Speichern</button>
         </div>
         <p id="nameNote" class="note" aria-live="polite"></p>
       </form>
@@ -268,6 +296,128 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
 
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  var LANG = lsGet("ph-lang") === "en" ? "en" : "de";
+  var I18N = {
+    de: {
+      lead: "Spring über Stacheln und Lücken, duck dich unter Vögeln und Balken, hol dir Power-ups aus ?-Blöcken und flieg über breite Schluchten. Dein Score kommt in die gemeinsame Bestenliste.",
+      soundOn: "Ton an", soundOff: "Ton aus", langLabel: "Sprache", modeLabel: "Spielmodus", endless: "Endlos", adventure: "Abenteuer",
+      worldPick: "Welt wählen", world: "Welt {n}",
+      canvasAria: "Spielfeld. Leertaste, Pfeil hoch oder Tippen zum Springen. Pfeil runter oder unteres Drittel gedrückt halten zum Ducken.",
+      padLabel: "Touch-Steuerung", left: "Links", right: "Rechts", fire: "Feuer", jump: "Sprung",
+      hintEndless: "<kbd>Leertaste</kbd> <kbd>↑</kbd> oder Tippen: springen, länger halten springt höher. <kbd>↓</kbd> oder unteres Drittel gedrückt halten: ducken. Spring von unten gegen einen ?-Block für ein Power-up: Schild, Magnet, Doppelsprung, Flügel oder doppelte Punkte. Mit Flügeln hältst du die Sprungtaste zum Steigen.",
+      hintAdv: "<kbd>←</kbd> <kbd>→</kbd> oder <kbd>A</kbd> <kbd>D</kbd>: laufen. <kbd>Leertaste</kbd>: springen, länger halten springt höher. <kbd>F</kbd> oder <kbd>Shift</kbd>: Feuerball, wenn du eine Feuerblume hast. Spring auf Gegner, um sie zu besiegen. Stachelige Gegner besiegst du nur mit Feuer. Triff ?-Blöcke von unten. Ziel ist die Flagge. Münzen kommen auf dein Konto, die Bestenliste zählt nur im Endlos-Modus.",
+      shop: "Skin-Box", coins: "Münzen", buyText: "Münzen aus deinen Runden landen auf deinem Konto. Jede Box enthält einen zufälligen Skin.",
+      oddsNote: "Chancen pro Box. Doppelte Skins geben einen Teil der Münzen zurück.", collection: "Sammlung",
+      board: "Bestenliste", yourBest: "Dein Rekord", tabsLabel: "Ansicht", tabAll: "Alle Spieler", tabMine: "Meine Runden",
+      nameLabel: "Dein Name in der Liste", save: "Speichern", player: "Spieler", you: "du",
+      openBox: "Box öffnen · {p} Münzen", equippedNote: "Angelegt: {n}", equipped: "Angelegt", equip: "Anlegen",
+      need1: "Dir fehlt noch 1 Münze.", needN: "Dir fehlen noch {n} Münzen.", enoughCoins: "Genug Münzen für eine Box.",
+      dupeLine: "Schon in deiner Sammlung: {n} Münzen zurück.", newLine: "Neuer Skin für deine Sammlung!", shaking: "Die Box wackelt …",
+      oddsItem: "{r} {w} % · doppelt +{n}", of: "{a} von {b}",
+      saveCloud: "Münzen und Skins sind in deinem Konto gespeichert und folgen dir auf andere Geräte.",
+      saveReadOnly: "Nur Lesezugriff: Münzen und Skins bleiben auf diesem Gerät.",
+      saveSignedOut: "Nicht angemeldet: Münzen und Skins bleiben auf diesem Gerät.",
+      saveLocal: "Münzen und Skins bleiben auf diesem Gerät.",
+      saveFail: "Konto konnte nicht online gespeichert werden. Es bleibt auf diesem Gerät.",
+      coin1: "Münze", coinN: "Münzen", enemy1: "Gegner", enemyN: "Gegner",
+      points: "Punkte", best: "Rekord {n}", startTip: "Tippen oder Leertaste zum Starten", readyHint: "↓ ducken · ?-Blöcke geben Power-ups",
+      over: "Aus!", pointsN: "{n} Punkte", runLine: "{d} m · +{c} {u} im Konto", newRecord: "Neuer Rekord!", tryAgain: "Tippen für einen neuen Versuch",
+      chasmHint: "Breite Schlucht! Flügel einsammeln", lifeLost: "Leben verloren", checkpoint: "Checkpoint!",
+      advReady: "Abenteuer · Welt {n}", advTip1: "← → oder A D laufen, Leertaste springen", advTip2: "Auf Gegner springen, ?-Blöcke von unten treffen",
+      advClear: "Welt {n} geschafft!", advOver: "Keine Leben mehr", advStats: "{c} {u} · {k} {e} · {t} s",
+      newBest: "Neuer Bestwert!", bestAdv: "Bestwert {n}", earned: "+{n} {u} im Konto", tapWorld: "Tippen für Welt {n}",
+      mOffline: "Offline: Rekord bleibt auf diesem Gerät", mSignedOut: "Nicht angemeldet: Rekord nur auf diesem Gerät",
+      mReadOnly: "Nur Lesezugriff: Rekord nur auf diesem Gerät", mSaved: "In der Bestenliste gespeichert",
+      mNoRights: "Keine Schreibrechte für diese Seite", mFail: "Speichern fehlgeschlagen, später nochmal versuchen",
+      stConnecting: "Verbinde mit der Bestenliste …",
+      stOffline: "Online-Bestenliste nicht verfügbar. Deine besten Runden findest du unter „Meine Runden“.",
+      stSignIn: "Melde dich an, um Scores einzutragen. Mitlesen geht auch so.",
+      stReadOnly: "Du kannst mitlesen. Zum Eintragen brauchst du Schreibrechte.",
+      stLive: "Live: alle Spieler sehen dieselbe Liste.", stUnreach: "Bestenliste gerade nicht erreichbar.",
+      emptyAll: "Noch keine Einträge. Spiel eine Runde und sei die oder der Erste.",
+      emptyMine: "Noch keine Runden gespeichert. Spiel eine Runde, dann steht sie hier.",
+      rankOf: "Dein Platz: {r} von {n}", rankPlain: "Dein Platz: {r}", rankOut: "Dein Platz: außerhalb der Top 50",
+      subRun: "{d} m · {c} {u}", subAdv: "{t} s · {c} {u}",
+      nameSaved: "Name gespeichert.", nameFail: "Name konnte nicht gespeichert werden.",
+      nameLater: "Name gespeichert. Er erscheint mit deinem nächsten Rekord.", nameEmpty: "Ohne Namen heißt du „Spieler“.",
+      rar_common: "Gewöhnlich", rar_rare: "Selten", rar_epic: "Episch", rar_legend: "Legendär",
+      pu_shield: "Schild", pu_magnet: "Magnet", pu_dbl: "Doppelsprung", pu_wing: "Flügel", pu_x2: "Doppelte Punkte", pu_fire: "Feuerblume"
+    },
+    en: {
+      lead: "Jump over spikes and gaps, duck under birds and beams, grab power-ups from ? blocks and fly across wide chasms. Your score goes on the shared leaderboard.",
+      soundOn: "Sound on", soundOff: "Sound off", langLabel: "Language", modeLabel: "Game mode", endless: "Endless", adventure: "Adventure",
+      worldPick: "Choose world", world: "World {n}",
+      canvasAria: "Game field. Space, Arrow Up or tap to jump. Hold Arrow Down or the lower third of the screen to duck.",
+      padLabel: "Touch controls", left: "Left", right: "Right", fire: "Fire", jump: "Jump",
+      hintEndless: "<kbd>Space</kbd> <kbd>↑</kbd> or tap: jump, hold longer to jump higher. <kbd>↓</kbd> or hold the lower third of the screen: duck. Jump up into a ? block for a power-up: shield, magnet, double jump, wings or double points. With wings, hold the jump key to climb.",
+      hintAdv: "<kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd>: run. <kbd>Space</kbd>: jump, hold longer to jump higher. <kbd>F</kbd> or <kbd>Shift</kbd>: fireball if you have a fire flower. Jump on enemies to defeat them. Spiky enemies can only be beaten with fire. Hit ? blocks from below. The goal is the flag. Coins go to your account. The leaderboard only counts in Endless mode.",
+      shop: "Skin box", coins: "Coins", buyText: "Coins from your runs go to your account. Each box contains a random skin.",
+      oddsNote: "Odds per box. Duplicate skins give back part of the coins.", collection: "Collection",
+      board: "Leaderboard", yourBest: "Your best", tabsLabel: "View", tabAll: "Everyone", tabMine: "My runs",
+      nameLabel: "Your name on the board", save: "Save", player: "Player", you: "you",
+      openBox: "Open box · {p} coins", equippedNote: "Equipped: {n}", equipped: "Equipped", equip: "Equip",
+      need1: "You need 1 more coin.", needN: "You need {n} more coins.", enoughCoins: "Enough coins for a box.",
+      dupeLine: "Already in your collection: {n} coins back.", newLine: "New skin for your collection!", shaking: "The box is shaking …",
+      oddsItem: "{r} {w}% · duplicate +{n}", of: "{a} of {b}",
+      saveCloud: "Coins and skins are saved in your account and follow you to other devices.",
+      saveReadOnly: "Read-only access: coins and skins stay on this device.",
+      saveSignedOut: "Not signed in: coins and skins stay on this device.",
+      saveLocal: "Coins and skins stay on this device.",
+      saveFail: "Your account could not be saved online. It stays on this device.",
+      coin1: "coin", coinN: "coins", enemy1: "enemy", enemyN: "enemies",
+      points: "Points", best: "Best {n}", startTip: "Tap or press Space to start", readyHint: "↓ duck · ? blocks give power-ups",
+      over: "Game over!", pointsN: "{n} points", runLine: "{d} m · +{c} {u} in your account", newRecord: "New record!", tryAgain: "Tap to try again",
+      chasmHint: "Wide chasm! Grab the wings", lifeLost: "Life lost", checkpoint: "Checkpoint!",
+      advReady: "Adventure · World {n}", advTip1: "← → or A D to run, Space to jump", advTip2: "Jump on enemies, hit ? blocks from below",
+      advClear: "World {n} cleared!", advOver: "Out of lives", advStats: "{c} {u} · {k} {e} · {t} s",
+      newBest: "New best!", bestAdv: "Best {n}", earned: "+{n} {u} in your account", tapWorld: "Tap for World {n}",
+      mOffline: "Offline: record stays on this device", mSignedOut: "Not signed in: record only on this device",
+      mReadOnly: "Read-only access: record only on this device", mSaved: "Saved to the leaderboard",
+      mNoRights: "No write access on this page", mFail: "Saving failed, try again later",
+      stConnecting: "Connecting to the leaderboard …",
+      stOffline: "Online leaderboard not available. Your best runs are under “My runs”.",
+      stSignIn: "Sign in to submit scores. You can still read the board.",
+      stReadOnly: "You can read the board. You need write access to submit scores.",
+      stLive: "Live: all players see the same list.", stUnreach: "Leaderboard currently unreachable.",
+      emptyAll: "No entries yet. Play a round and be the first.",
+      emptyMine: "No runs saved yet. Play a round and it shows up here.",
+      rankOf: "Your rank: {r} of {n}", rankPlain: "Your rank: {r}", rankOut: "Your rank: outside the top 50",
+      subRun: "{d} m · {c} {u}", subAdv: "{t} s · {c} {u}",
+      nameSaved: "Name saved.", nameFail: "Name could not be saved.",
+      nameLater: "Name saved. It shows up with your next record.", nameEmpty: "Without a name you appear as “Player”.",
+      rar_common: "Common", rar_rare: "Rare", rar_epic: "Epic", rar_legend: "Legendary",
+      pu_shield: "Shield", pu_magnet: "Magnet", pu_dbl: "Double jump", pu_wing: "Wings", pu_x2: "Double points", pu_fire: "Fire flower"
+    }
+  };
+  var SKIN_EN = { korall: "Coral", minze: "Mint", himmel: "Sky", sonne: "Sunny", bonbon: "Candy", matrose: "Sailor", dalmatiner: "Dalmatian",
+    ritter: "Knight", kuerbis: "Pumpkin", neon: "Neon", magma: "Magma", galaxie: "Galaxy", regenbogen: "Rainbow", gold: "Golden Hopper" };
+  function T(k, v) {
+    var s = I18N[LANG][k];
+    if (s === undefined) s = I18N.de[k];
+    if (s === undefined) s = k;
+    if (v) s = s.replace(/\{(\w+)\}/g, function (m, n) { return v[n] === undefined ? m : v[n]; });
+    return s;
+  }
+  function skinName(sk) { return LANG === "en" && SKIN_EN[sk.id] ? SKIN_EN[sk.id] : sk.name; }
+  function rarName(k) { return T("rar_" + k); }
+  function puName(k) { return T("pu_" + k); }
+  function coinWord(n) { return T(n === 1 ? "coin1" : "coinN"); }
+  function enemyWord(n) { return T(n === 1 ? "enemy1" : "enemyN"); }
+  function applyStatic() {
+    var els, i, de = document.documentElement;
+    els = document.querySelectorAll("[data-i18n]");
+    for (i = 0; i < els.length; i++) els[i].textContent = T(els[i].getAttribute("data-i18n"));
+    els = document.querySelectorAll("[data-i18n-html]");
+    for (i = 0; i < els.length; i++) els[i].innerHTML = T(els[i].getAttribute("data-i18n-html"));
+    els = document.querySelectorAll("[data-i18n-aria]");
+    for (i = 0; i < els.length; i++) els[i].setAttribute("aria-label", T(els[i].getAttribute("data-i18n-aria")));
+    els = document.querySelectorAll("[data-i18n-ph]");
+    for (i = 0; i < els.length; i++) els[i].setAttribute("placeholder", T(els[i].getAttribute("data-i18n-ph")));
+    els = document.querySelectorAll(".lvl");
+    for (i = 0; i < els.length; i++) els[i].textContent = T("world", { n: els[i].getAttribute("data-lvl") });
+    if (de && de.setAttribute) de.setAttribute("lang", LANG);
+  }
 
   function fit() {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -377,11 +527,11 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   var profilePath = null, cloudProfile = false, savingProfile = false, saveAgain = false, walletTouched = false, saveMsg = "";
   function updateSaveNote() {
     var t;
-    if (cloudProfile) t = "Münzen und Skins sind in deinem Konto gespeichert und folgen dir auf andere Geräte.";
-    else if (uid && !canWrite) t = "Nur Lesezugriff: Münzen und Skins bleiben auf diesem Gerät.";
-    else if (db && !uid) t = "Nicht angemeldet: Münzen und Skins bleiben auf diesem Gerät.";
-    else t = "Münzen und Skins bleiben auf diesem Gerät.";
-    $("saveNote").textContent = saveMsg || t;
+    if (cloudProfile) t = T("saveCloud");
+    else if (uid && !canWrite) t = T("saveReadOnly");
+    else if (db && !uid) t = T("saveSignedOut");
+    else t = T("saveLocal");
+    $("saveNote").textContent = saveMsg ? T(saveMsg) : t;
   }
   async function flushProfile() {
     if (savingProfile) { saveAgain = true; return; }
@@ -394,7 +544,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
       saveMsg = "";
     } catch (e) {
       if (e && e.code === "invalid_argument") cloudProfile = false;
-      saveMsg = "Konto konnte nicht online gespeichert werden. Es bleibt auf diesem Gerät.";
+      saveMsg = "saveFail";
     } finally { savingProfile = false; updateSaveNote(); }
   }
   function saveWallet() {
@@ -416,7 +566,8 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   function earnCoins() { if (G.coins > 0) { wallet.coins += G.coins; saveWallet(); } }
 
   var buyBtn = $("buyBtn"), buyNote = $("buyNote"), chest = $("chest"), revealEl = $("reveal"), boxBusy = false, revealHide = null;
-  buyBtn.textContent = "Box öffnen · " + PRICE + " Münzen";
+  function paintBuyLabel() { buyBtn.textContent = T("openBox", { p: PRICE }); }
+  paintBuyLabel();
 
   function roll() {
     var r = Math.random() * 100, i;
@@ -437,7 +588,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
     if (wallet.equipped === id) return;
     wallet.equipped = id;
     saveWallet();
-    buyNote.textContent = "Angelegt: " + SKIN_BY_ID[id].name;
+    buyNote.textContent = T("equippedNote", { n: skinName(SKIN_BY_ID[id]) });
   }
   function renderCollection() {
     var box = $("collection"), have = 0;
@@ -451,38 +602,40 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
       b.disabled = !own; b.setAttribute("aria-pressed", on ? "true" : "false");
       var cv = document.createElement("canvas"); cv.setAttribute("aria-hidden", "true");
       paintSkinCanvas(cv, sk, !own, 1);
-      var n = document.createElement("span"); n.className = "cn"; n.textContent = own ? sk.name : "???";
-      var r = document.createElement("span"); r.className = "cr"; r.textContent = on ? "Angelegt" : RAR[sk.r].name;
+      var n = document.createElement("span"); n.className = "cn"; n.textContent = own ? skinName(sk) : "???";
+      var r = document.createElement("span"); r.className = "cr"; r.textContent = on ? T("equipped") : rarName(sk.r);
       b.appendChild(cv); b.appendChild(n); b.appendChild(r);
       if (own) b.addEventListener("click", function () { equip(sk.id); });
       box.appendChild(b);
     });
-    $("collCount").textContent = have + " von " + SKINS.length;
+    $("collCount").textContent = T("of", { a: have, b: SKINS.length });
   }
   function paintShop() {
     var need = PRICE - wallet.coins;
     $("wallet").textContent = String(wallet.coins);
     $("meterFill").style.width = Math.min(100, Math.round(wallet.coins / PRICE * 100)) + "%";
     buyBtn.disabled = boxBusy || need > 0;
-    if (!boxBusy) buyNote.textContent = need > 0 ? "Dir fehlen noch " + need + " Münzen." : "Genug Münzen für eine Box.";
+    if (!boxBusy) buyNote.textContent = need > 0 ? T(need === 1 ? "need1" : "needN", { n: need }) : T("enoughCoins");
     renderCollection();
     updateSaveNote();
   }
+  var lastReveal = null;
   function showReveal(skin, dupe) {
+    lastReveal = { skin: skin, dupe: dupe };
     revealEl.hidden = false;
     revealEl.className = "reveal rar-" + skin.r;
     revealEl.textContent = "";
     var cv = document.createElement("canvas"); cv.setAttribute("aria-hidden", "true");
     paintSkinCanvas(cv, skin, false, 2);
     var info = document.createElement("div"); info.className = "reveal-info";
-    var badge = document.createElement("span"); badge.className = "badge rar-" + skin.r; badge.textContent = RAR[skin.r].name;
-    var nm = document.createElement("strong"); nm.textContent = skin.name;
+    var badge = document.createElement("span"); badge.className = "badge rar-" + skin.r; badge.textContent = rarName(skin.r);
+    var nm = document.createElement("strong"); nm.textContent = skinName(skin);
     var line = document.createElement("span");
-    line.textContent = dupe ? "Schon in deiner Sammlung: " + RAR[skin.r].refund + " Münzen zurück." : "Neuer Skin für deine Sammlung!";
+    line.textContent = dupe ? T("dupeLine", { n: RAR[skin.r].refund }) : T("newLine");
     info.appendChild(badge); info.appendChild(nm); info.appendChild(line);
     if (!dupe) {
-      var eq = document.createElement("button"); eq.type = "button"; eq.className = "btn"; eq.textContent = "Anlegen";
-      eq.addEventListener("click", function () { equip(skin.id); eq.disabled = true; eq.textContent = "Angelegt"; });
+      var eq = document.createElement("button"); eq.type = "button"; eq.className = "btn"; eq.textContent = T("equip");
+      eq.addEventListener("click", function () { equip(skin.id); eq.disabled = true; eq.textContent = T("equipped"); });
       info.appendChild(eq);
     }
     revealEl.appendChild(cv); revealEl.appendChild(info);
@@ -498,7 +651,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
     if (dupe) wallet.coins += RAR[rar].refund; else wallet.owned.push(skin.id);
     revealHide = dupe ? null : skin.id;
     revealEl.hidden = true;
-    buyNote.textContent = "Die Box wackelt …";
+    buyNote.textContent = T("shaking");
     saveWallet();
     chest.classList.add("shake");
     setTimeout(function () {
@@ -510,14 +663,16 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   }
   buyBtn.addEventListener("click", openBox);
 
-  (function renderOdds() {
+  function renderOdds() {
     var ul = $("odds");
+    ul.textContent = "";
     RAR_KEYS.forEach(function (k) {
       var li2 = document.createElement("li"); li2.className = "badge rar-" + k;
-      li2.textContent = RAR[k].name + " " + RAR[k].w + " % · doppelt +" + RAR[k].refund;
+      li2.textContent = T("oddsItem", { r: rarName(k), w: RAR[k].w, n: RAR[k].refund });
       ul.appendChild(li2);
     });
-  })();
+  }
+  renderOdds();
 
   /* ---------- Zustand ---------- */
   var G = { state: "ready", tick: 0, speed: 290, dist: 0, pts: 0, bonus: 0, coins: 0,
@@ -574,7 +729,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   }
   var soundBtn = $("sound");
   function paintSound() {
-    soundBtn.textContent = muted ? "Ton aus" : "Ton an";
+    soundBtn.textContent = T(muted ? "soundOff" : "soundOn");
     soundBtn.setAttribute("aria-pressed", muted ? "false" : "true");
   }
   paintSound();
@@ -586,7 +741,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   function grant(k, dur) {
     G.pu[k] = dur || PU[k].dur;
     if (k === "wing") { P.vy = Math.min(P.vy, -200); P.ground = false; P.coyote = 0; }
-    G.popup = { txt: PU[k].name + "!", t: 2 };
+    G.popup = { fn: function () { return puName(k) + "!"; }, t: 2 };
     burst(P.x + P.w / 2, P.y - P.curH / 2, 12, col[PU_COL[k]]);
     sfx("power");
   }
@@ -663,7 +818,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
       G.obs.push({ t: "pit", x: x + 190, w: w, h: 0 });
       for (i = 0; i < 8; i++) G.pickups.push({ x: x + 220 + i * ((w - 60) / 7), y: GROUND - 110 - Math.sin(i / 7 * Math.PI) * 40, ph: i });
       used = 190 + w; extra = 200; G.sinceChasm = 0;
-      G.hint = { txt: "Breite Schlucht! Flügel einsammeln", t: 3.4 };
+      G.hint = { fn: function () { return T("chasmHint"); }, t: 3.4 };
     }
     G.spawnIn = used + extra + 210 + G.speed * 0.42 + Math.random() * 120;
   }
@@ -822,6 +977,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
     G.record = s > prevBest && s > 0;
     if (s > localBest) { localBest = s; lsSet("ph-best", String(s)); }
     updateBestUI();
+    recordRun("e", s, Math.floor(G.dist), G.coins);
     var m = await submitScore(s, Math.floor(G.dist), G.coins);
     if (run === G.run) G.msg = m;
   }
@@ -1059,8 +1215,8 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
 
   function drawHud() {
     txt(String(score()), 16, 34, 30, "left", col.ink);
-    txt("Punkte", 16, 50, 13, "left", col.ink, 500);
-    txt("Rekord " + Math.max(myBest, localBest), 16, 68, 13, "left", col.ink, 500);
+    txt(T("points"), 16, 50, 13, "left", col.ink, 500);
+    txt(T("best", { n: Math.max(myBest, localBest) }), 16, 68, 13, "left", col.ink, 500);
     coinShape(W - 74, 26, 9, 9);
     txt("× " + G.coins, W - 56, 33, 22, "left", col.ink);
 
@@ -1078,10 +1234,10 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
       [G.popup, G.hint].forEach(function (m) {
         if (!m) return;
         ctx.font = "700 17px " + FONT;
-        var w = ctx.measureText(m.txt).width + 28;
+        var mt = m.fn ? m.fn() : m.txt, w = ctx.measureText(mt).width + 28;
         ctx.globalAlpha = Math.min(1, m.t * 2);
         panelBox(W / 2 - w / 2, yy, w, 30);
-        txt(m.txt, W / 2, yy + 21, 17, "center", col.ink);
+        txt(mt, W / 2, yy + 21, 17, "center", col.ink);
         ctx.globalAlpha = 1;
         yy += 38;
       });
@@ -1091,18 +1247,18 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   function drawReady() {
     panelBox(120, 96, 400, 128);
     txt("Pixel Hopper", W / 2, 148, 40, "center", col.ink);
-    txt("Tippen oder Leertaste zum Starten", W / 2, 184, 16, "center", col.muted, 500);
-    txt("↓ ducken · ?-Blöcke geben Power-ups", W / 2, 206, 14, "center", col.muted, 500);
+    txt(T("startTip"), W / 2, 184, 16, "center", col.muted, 500);
+    txt(T("readyHint"), W / 2, 206, 14, "center", col.muted, 500);
   }
   function drawOver() {
     ctx.globalAlpha = 0.5; ctx.fillStyle = col.ink; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
     panelBox(140, 62, 360, 212);
-    txt("Aus!", W / 2, 106, 36, "center", col.ink);
-    txt(score() + " Punkte", W / 2, 142, 28, "center", col.ink);
-    txt(Math.floor(G.dist) + " m · +" + G.coins + (G.coins === 1 ? " Münze" : " Münzen") + " im Konto", W / 2, 166, 15, "center", col.muted, 500);
-    if (G.record) txt("Neuer Rekord!", W / 2, 196, 22, "center", col.accent);
-    if (G.msg) txt(G.msg, W / 2, 222, 13, "center", col.muted, 500);
-    if (G.overT > 0.5 && Math.floor(G.tick * 2) % 2 === 0) txt("Tippen für einen neuen Versuch", W / 2, 256, 15, "center", col.ink, 500);
+    txt(T("over"), W / 2, 106, 36, "center", col.ink);
+    txt(T("pointsN", { n: score() }), W / 2, 142, 28, "center", col.ink);
+    txt(T("runLine", { d: Math.floor(G.dist), c: G.coins, u: coinWord(G.coins) }), W / 2, 166, 15, "center", col.muted, 500);
+    if (G.record) txt(T("newRecord"), W / 2, 196, 22, "center", col.accent);
+    if (G.msg) txt(T(G.msg), W / 2, 222, 13, "center", col.muted, 500);
+    if (G.overT > 0.5 && Math.floor(G.tick * 2) % 2 === 0) txt(T("tryAgain"), W / 2, 256, 15, "center", col.ink, 500);
   }
 
   /* ---------- Abenteuer-Modus ---------- */
@@ -1277,7 +1433,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   function advGrant(k) {
     A.pu[k] = ADV_PU[k].dur;
     if (k === "wing") A.p.vy = Math.min(A.p.vy, -160);
-    A.popup = { txt: ADV_PU[k].name + "!", t: 2 };
+    A.popup = { fn: function () { return puName(k) + "!"; }, t: 2 };
     advBurst(A.p.x + A.p.w / 2, A.p.y - A.p.h / 2, 12, col[ADV_PU[k].c]);
     sfx("power");
   }
@@ -1289,6 +1445,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   function advCredit() {
     if (A.credited) return;
     A.credited = true; A.earned = A.coins;
+    recordRun("w" + A.level, A.score, Math.floor(A.time), A.coins);
     if (A.coins > 0) { wallet.coins += A.coins; saveWallet(); }
   }
   function hitBlock(c, q) {
@@ -1313,7 +1470,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
     if (A.lives <= 0) { A.state = "over"; A.overT = 0; advCredit(); return; }
     p.x = A.spawnX; p.y = OY + GR * TS; p.vx = 0; p.vy = 0; p.inv = 1.8; p.buffer = 0; p.coyote = 0;
     A.pu = { shield: 0, fire: 0, dbl: 0, wing: 0 };
-    A.popup = { txt: "Leben verloren", t: 1.6 };
+    A.popup = { fn: function () { return T("lifeLost"); }, t: 1.6 };
     A.cam = clamp(p.x - 220, 0, A.L.w * TS - W);
   }
   function hurt() {
@@ -1403,7 +1560,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
       }
     }
     if (!A.checkHit && L.checkX && p.x > L.checkX) {
-      A.checkHit = true; A.spawnX = L.checkX; A.popup = { txt: "Checkpoint!", t: 1.8 }; sfx("power");
+      A.checkHit = true; A.spawnX = L.checkX; A.popup = { fn: function () { return T("checkpoint"); }, t: 1.8 }; sfx("power");
     }
 
     for (i = 0; i < A.ents.length; i++) {
@@ -1632,7 +1789,7 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   function drawAdvHud() {
     var bm = ["0110110", "1111111", "1111111", "0111110", "0011100", "0001000"], i, rr, cc;
     txt(String(A.score), 16, 34, 30, "left", col.ink);
-    txt("Welt " + A.level, 16, 50, 13, "left", col.ink, 500);
+    txt(T("world", { n: A.level }), 16, 50, 13, "left", col.ink, 500);
     for (i = 0; i < A.lives; i++) {
       for (rr = 0; rr < 6; rr++) for (cc = 0; cc < 7; cc++) if (bm[rr].charAt(cc) === "1") rect(16 + i * 22 + cc * 2, 58 + rr * 2, 2, 2, col.accent);
     }
@@ -1648,10 +1805,10 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
       });
       if (A.popup) {
         ctx.font = "700 17px " + FONT;
-        var pw = ctx.measureText(A.popup.txt).width + 28;
+        var pt = A.popup.fn ? A.popup.fn() : A.popup.txt, pw = ctx.measureText(pt).width + 28;
         ctx.globalAlpha = Math.min(1, A.popup.t * 2);
         panelBox(W / 2 - pw / 2, 84, pw, 30);
-        txt(A.popup.txt, W / 2, 105, 17, "center", col.ink);
+        txt(pt, W / 2, 105, 17, "center", col.ink);
         ctx.globalAlpha = 1;
       }
     }
@@ -1661,21 +1818,21 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
     var clear = A.state === "clear";
     if (A.state === "ready") {
       panelBox(100, 80, 440, 160);
-      txt("Abenteuer · Welt " + A.level, W / 2, 130, 32, "center", col.ink);
-      txt("← → oder A D laufen, Leertaste springen", W / 2, 164, 15, "center", col.muted, 500);
-      txt("Auf Gegner springen, ?-Blöcke von unten treffen", W / 2, 186, 14, "center", col.muted, 500);
-      txt("Tippen oder Leertaste zum Starten", W / 2, 218, 15, "center", col.ink, 500);
+      txt(T("advReady", { n: A.level }), W / 2, 130, 32, "center", col.ink);
+      txt(T("advTip1"), W / 2, 164, 15, "center", col.muted, 500);
+      txt(T("advTip2"), W / 2, 186, 14, "center", col.muted, 500);
+      txt(T("startTip"), W / 2, 218, 15, "center", col.ink, 500);
     } else if (A.state === "over" || clear) {
       ctx.globalAlpha = 0.5; ctx.fillStyle = col.ink; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
       panelBox(130, 46, 380, 252);
-      txt(clear ? "Welt " + A.level + " geschafft!" : "Keine Leben mehr", W / 2, 94, clear ? 32 : 30, "center", col.ink);
-      txt(A.score + " Punkte", W / 2, 130, 28, "center", col.ink);
-      txt(A.coins + (A.coins === 1 ? " Münze" : " Münzen") + " · " + A.kills + (A.kills === 1 ? " Gegner" : " Gegner") + " · " + Math.floor(A.time) + " s", W / 2, 154, 14, "center", col.muted, 500);
-      if (A.newBest) txt("Neuer Bestwert!", W / 2, 186, 22, "center", col.accent);
-      else txt("Bestwert " + A.best, W / 2, 184, 14, "center", col.muted, 500);
-      txt("+" + A.earned + " Münzen im Konto", W / 2, 212, 14, "center", col.muted, 500);
+      txt(clear ? T("advClear", { n: A.level }) : T("advOver"), W / 2, 94, clear ? 32 : 30, "center", col.ink);
+      txt(T("pointsN", { n: A.score }), W / 2, 130, 28, "center", col.ink);
+      txt(T("advStats", { c: A.coins, u: coinWord(A.coins), k: A.kills, e: enemyWord(A.kills), t: Math.floor(A.time) }), W / 2, 154, 14, "center", col.muted, 500);
+      if (A.newBest) txt(T("newBest"), W / 2, 186, 22, "center", col.accent);
+      else txt(T("bestAdv", { n: A.best }), W / 2, 184, 14, "center", col.muted, 500);
+      txt(T("earned", { n: A.earned, u: coinWord(A.earned) }), W / 2, 212, 14, "center", col.muted, 500);
       if (A.overT > 0.6 && Math.floor(A.tick * 2) % 2 === 0) {
-        txt(clear ? "Tippen für Welt " + (A.level % 3 + 1) : "Tippen für einen neuen Versuch", W / 2, 262, 15, "center", col.ink, 500);
+        txt(clear ? T("tapWorld", { n: A.level % 3 + 1 }) : T("tryAgain"), W / 2, 262, 15, "center", col.ink, 500);
       }
     }
   }
@@ -1766,50 +1923,119 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
   requestAnimationFrame(frame);
 
   /* ---------- Bestenliste ---------- */
-  var rowsEl = $("rows"), emptyEl = $("empty"), statusEl = $("status"), nick = $("nick"), nameNote = $("nameNote");
-  var boardRows = [];
-  function setStatus(s) { statusEl.textContent = s; }
-  function updateBestUI() { $("best").textContent = String(Math.max(myBest, localBest)); }
+  var rowsEl = $("rows"), emptyEl = $("empty"), statusEl = $("status"), nick = $("nick"), nameNote = $("nameNote"), rankEl = $("yourRank");
+  var boardRows = [], boardTab = "all", boardLoaded = false, statusKey = "stConnecting", runs = [];
+  try {
+    runs = JSON.parse(lsGet("ph-runs") || "[]");
+    if (!Array.isArray(runs)) runs = [];
+    runs = runs.filter(function (r) { return r && typeof r.s === "number" && r.s > 0; }).slice(0, 8);
+  } catch (e) { runs = []; }
+
+  function nfmt(n) {
+    var v = Number(n) || 0;
+    try { return v.toLocaleString(LANG === "en" ? "en-GB" : "de-DE"); } catch (e) { return String(v); }
+  }
+  function dateStr(at) {
+    try { return new Date(at).toLocaleDateString(LANG === "en" ? "en-GB" : "de-DE", { day: "2-digit", month: "2-digit" }); } catch (e) { return ""; }
+  }
+  function renderStatus() { statusEl.textContent = T(statusKey); }
+  function setStatus(k) { statusKey = k; renderStatus(); }
+  function updateBestUI() { $("best").textContent = nfmt(Math.max(myBest, localBest)); }
   function cleanName(s) { return (s || "").replace(/\s+/g, " ").trim().slice(0, 14); }
 
-  function li(cls, rank, name, pts) {
-    var el = document.createElement("li"); el.className = cls;
-    var a = document.createElement("span"); a.className = "rank"; a.textContent = rank;
-    var b = document.createElement("span"); b.className = "who"; b.textContent = name;
-    var c = document.createElement("span"); c.className = "pts"; c.textContent = pts;
-    el.appendChild(a); el.appendChild(b); el.appendChild(c);
+  function recordRun(m, sc, a, c) {
+    if (!(sc > 0)) return;
+    runs.push({ m: m, s: Math.floor(sc), a: Math.floor(a), c: c, at: Date.now() });
+    runs.sort(function (x, y) { return y.s - x.s; });
+    runs = runs.slice(0, 8);
+    lsSet("ph-runs", JSON.stringify(runs));
+    renderBoard();
+  }
+  function runLabel(m) { return m === "e" ? T("endless") : T("world", { n: String(m).slice(1) }); }
+  function statLine(m, a, c) { return T(m === "e" ? "subRun" : "subAdv", { d: a, t: a, c: c || 0, u: coinWord(c || 0) }); }
+
+  function rowEl(o) {
+    var el = document.createElement("li"); el.className = o.cls || "";
+    el.style.setProperty("--w", Math.round(Math.max(0, Math.min(1, o.frac || 0)) * 100) + "%");
+    var rk = document.createElement("span"); rk.className = "rank" + (o.small ? " small" : ""); rk.textContent = o.rank;
+    var who = document.createElement("span"); who.className = "who";
+    var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = o.name;
+    who.appendChild(nm);
+    if (o.sub) { var sb = document.createElement("span"); sb.className = "sub"; sb.textContent = o.sub; who.appendChild(sb); }
+    var box = document.createElement("span"); box.className = "pts-box";
+    var pt = document.createElement("span"); pt.className = "pts"; pt.textContent = o.pts;
+    box.appendChild(pt);
+    if (o.ptsSub) { var ps = document.createElement("span"); ps.className = "pts-sub"; ps.textContent = o.ptsSub; box.appendChild(ps); }
+    el.appendChild(rk); el.appendChild(who); el.appendChild(box);
     return el;
   }
+
   function renderBoard() {
+    var i, maxS, myIdx = -1;
     rowsEl.textContent = "";
-    var inTop = false;
-    boardRows.forEach(function (r, i) {
-      var mine = uid && r.id === uid;
-      if (mine) inTop = true;
-      var name = String(r.name || "Spieler").slice(0, 14) + (mine ? " (du)" : "");
-      rowsEl.appendChild(li((i < 3 ? "r" + (i + 1) : "") + (mine ? " mine" : ""), String(i + 1), name, String(Number(r.score) || 0)));
-    });
-    if (uid && myBest > 0 && !inTop) {
-      var gap = document.createElement("li"); gap.className = "gap"; gap.textContent = "…";
-      rowsEl.appendChild(gap);
-      rowsEl.appendChild(li("mine", "–", (myName || "Spieler") + " (du)", String(myBest)));
+    rankEl.hidden = true;
+    if (boardTab === "all") {
+      maxS = boardRows.length ? (Number(boardRows[0].score) || 1) : 1;
+      for (i = 0; i < boardRows.length; i++) if (uid && boardRows[i].id === uid) myIdx = i;
+      boardRows.slice(0, 10).forEach(function (r, i2) {
+        var mine = i2 === myIdx, sc = Number(r.score) || 0;
+        rowsEl.appendChild(rowEl({
+          cls: (i2 < 3 ? "r" + (i2 + 1) : "") + (mine ? " mine" : ""), rank: String(i2 + 1),
+          name: (r.name || T("player")) + (mine ? " (" + T("you") + ")" : ""),
+          sub: r.dist != null ? statLine("e", r.dist, r.coins) : "", pts: nfmt(sc), ptsSub: r.at ? dateStr(r.at) : "", frac: sc / maxS
+        }));
+      });
+      if (uid && myBest > 0) {
+        var lenKnown = boardRows.length < 50;
+        if (myIdx >= 10 || myIdx < 0) {
+          var mr = myIdx >= 0 ? boardRows[myIdx] : null, gap = document.createElement("li");
+          gap.className = "gap"; gap.textContent = "···"; rowsEl.appendChild(gap);
+          rowsEl.appendChild(rowEl({
+            cls: "mine", rank: myIdx >= 0 ? String(myIdx + 1) : (lenKnown ? "–" : "50+"), small: myIdx < 0 && !lenKnown,
+            name: ((mr && mr.name) || myName || T("player")) + " (" + T("you") + ")",
+            sub: mr && mr.dist != null ? statLine("e", mr.dist, mr.coins) : "", pts: nfmt(myBest), ptsSub: mr && mr.at ? dateStr(mr.at) : "", frac: myBest / maxS
+          }));
+        }
+        if (myIdx >= 0 || !lenKnown) {
+          rankEl.hidden = false;
+          rankEl.textContent = myIdx >= 0 ? (lenKnown ? T("rankOf", { r: myIdx + 1, n: boardRows.length }) : T("rankPlain", { r: myIdx + 1 })) : T("rankOut");
+        }
+      }
+      emptyEl.textContent = T("emptyAll");
+      emptyEl.hidden = boardRows.length > 0 || !boardLoaded;
+    } else {
+      maxS = runs.length ? runs[0].s : 1;
+      runs.forEach(function (r, i2) {
+        rowsEl.appendChild(rowEl({
+          cls: i2 < 3 ? "r" + (i2 + 1) : "", rank: String(i2 + 1), name: runLabel(r.m),
+          sub: statLine(r.m, r.a, r.c), pts: nfmt(r.s), ptsSub: dateStr(r.at), frac: r.s / maxS
+        }));
+      });
+      emptyEl.textContent = T("emptyMine");
+      emptyEl.hidden = runs.length > 0;
     }
-    emptyEl.hidden = rowsEl.children.length > 0;
+  }
+  function setTab(t) {
+    if (t === "all" && !db) return;
+    boardTab = t;
+    $("tabAll").classList.toggle("on", t === "all"); $("tabAll").setAttribute("aria-pressed", t === "all" ? "true" : "false");
+    $("tabMine").classList.toggle("on", t === "mine"); $("tabMine").setAttribute("aria-pressed", t === "mine" ? "true" : "false");
+    renderBoard();
   }
 
-  async function submitScore(s, distM, coinCount) {
-    if (!db) return "Offline: Rekord bleibt auf diesem Gerät";
-    if (!uid) return "Nicht angemeldet: Rekord nur auf diesem Gerät";
-    if (!canWrite) return "Nur Lesezugriff: Rekord nur auf diesem Gerät";
-    if (s <= myBest) return "";
+  async function submitScore(sc, distM, coinCount) {
+    if (!db) return "mOffline";
+    if (!uid) return "mSignedOut";
+    if (!canWrite) return "mReadOnly";
+    if (sc <= myBest) return "";
     if (submitting) return "";
     submitting = true;
     try {
-      await db.doc("scores/" + uid).set({ name: cleanName(nick.value) || "Spieler", score: s, dist: distM, coins: coinCount, at: Date.now() });
-      return "In der Bestenliste gespeichert";
+      await db.doc("scores/" + uid).set({ name: cleanName(nick.value) || myName, score: sc, dist: distM, coins: coinCount, at: Date.now() });
+      return "mSaved";
     } catch (e) {
-      if (e && e.code === "invalid_argument") { canWrite = false; return "Keine Schreibrechte für diese Seite"; }
-      return "Speichern fehlgeschlagen, später nochmal versuchen";
+      if (e && e.code === "invalid_argument") { canWrite = false; return "mNoRights"; }
+      return "mFail";
     } finally { submitting = false; }
   }
 
@@ -1819,38 +2045,62 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
     nick.value = n;
     lsSet("ph-name", n);
     if (db && uid && canWrite && myBest > 0 && n && n !== myName) {
-      try { await db.doc("scores/" + uid).update({ name: n }); nameNote.textContent = "Name gespeichert."; }
-      catch (err) { nameNote.textContent = "Name konnte nicht gespeichert werden."; }
+      try { await db.doc("scores/" + uid).update({ name: n }); nameNote.textContent = T("nameSaved"); }
+      catch (err) { nameNote.textContent = T("nameFail"); }
+    } else if (!db) {
+      nameNote.textContent = T("nameSaved");
     } else {
-      nameNote.textContent = n ? "Name gespeichert. Er erscheint mit deinem nächsten Rekord." : "Ohne Namen heißt du „Spieler“.";
+      nameNote.textContent = n ? T("nameLater") : T("nameEmpty");
     }
   });
 
-  nick.value = lsGet("ph-name") || "";
-  updateBestUI();
-  renderBoard();
+  function setLang(l) {
+    LANG = l === "en" ? "en" : "de";
+    lsSet("ph-lang", LANG);
+    $("langDe").classList.toggle("on", LANG === "de"); $("langDe").setAttribute("aria-pressed", LANG === "de" ? "true" : "false");
+    $("langEn").classList.toggle("on", LANG === "en"); $("langEn").setAttribute("aria-pressed", LANG === "en" ? "true" : "false");
+    applyStatic();
+    paintSound(); paintBuyLabel(); renderOdds(); paintShop();
+    if (lastReveal && !$("reveal").hidden) showReveal(lastReveal.skin, lastReveal.dupe);
+    updateBestUI(); renderBoard(); renderStatus();
+    nameNote.textContent = "";
+  }
+  function wireUI() {
+    $("langDe").addEventListener("click", function () { setLang("de"); this.blur(); });
+    $("langEn").addEventListener("click", function () { setLang("en"); this.blur(); });
+    $("tabAll").addEventListener("click", function () { setTab("all"); this.blur(); });
+    $("tabMine").addEventListener("click", function () { setTab("mine"); this.blur(); });
+  }
 
+  function noBoard() {
+    setStatus("stOffline");
+    $("tabAll").disabled = true;
+    setTab("mine");
+  }
   async function initCloud() {
     var cl = window.claude;
-    if (!cl || !cl.use) { setStatus("Offline: Scores bleiben auf diesem Gerät."); return; }
+    if (!cl || !cl.use) { noBoard(); return; }
     try {
       var user = await cl.use("user");
       uid = user ? await user.id() : null;
       if (user) { var w = await user.can("data.write"); if (w === false) canWrite = false; }
       db = await cl.use("db");
     } catch (e) { db = null; }
-    if (!db) { setStatus("Bestenliste nicht verfügbar: Scores bleiben auf diesem Gerät."); return; }
-    setStatus(!uid ? "Melde dich an, um Scores einzutragen. Mitlesen geht auch so."
-      : !canWrite ? "Du kannst mitlesen. Zum Eintragen brauchst du Schreibrechte."
-      : "Live: alle Spieler sehen dieselbe Liste.");
-    db.collection("scores").orderBy("score", "desc").limit(10).onSnapshot(function (snap) {
-      boardRows = snap.docs.map(function (d) { var v = d.data() || {}; return { id: d.id, name: v.name, score: v.score }; });
+    if (!db) { noBoard(); return; }
+    $("tabAll").disabled = false;
+    setStatus(!uid ? "stSignIn" : !canWrite ? "stReadOnly" : "stLive");
+    db.collection("scores").orderBy("score", "desc").limit(50).onSnapshot(function (snap) {
+      boardRows = snap.docs.map(function (d) {
+        var v = d.data() || {};
+        return { id: d.id, name: v.name, score: v.score, dist: v.dist, coins: v.coins, at: v.at };
+      });
+      boardLoaded = true;
       renderBoard();
-    }, function () { setStatus("Bestenliste gerade nicht erreichbar."); });
+    }, function () { setStatus("stUnreach"); });
     if (uid) {
-      db.doc("scores/" + uid).onSnapshot(function (s) {
-        if (s.exists) {
-          var d = s.data() || {};
+      db.doc("scores/" + uid).onSnapshot(function (sn) {
+        if (sn.exists) {
+          var d = sn.data() || {};
           myBest = Number(d.score) || 0; myName = String(d.name || "");
           if (!nick.value && myName) nick.value = myName;
         } else { myBest = 0; myName = ""; }
@@ -1860,10 +2110,20 @@ h3 { font: 700 17px/1.2 var(--font-display); margin: 0; }
     }
     updateSaveNote();
   }
+
+  nick.value = lsGet("ph-name") || "";
+  $("langDe").classList.toggle("on", LANG === "de"); $("langDe").setAttribute("aria-pressed", LANG === "de" ? "true" : "false");
+  $("langEn").classList.toggle("on", LANG === "en"); $("langEn").setAttribute("aria-pressed", LANG === "en" ? "true" : "false");
+  applyStatic();
+  paintSound();
+  updateBestUI();
+  renderBoard();
+  renderStatus();
   paintShop();
   wireModes();
+  wireUI();
   initCloud();
 })();
 </script>
-</body>
-</html>
+
+</body></html>
